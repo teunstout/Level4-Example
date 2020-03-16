@@ -15,12 +15,4 @@ data class Reminder(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Long? = null
-) : Parcelable {
-    companion object{
-        val STANDERTREMINDERS = arrayOf(
-            "Koken",
-            "Stofzuigen",
-            "Dokters afspraak"
-        )
-    }
-}
+) : Parcelable

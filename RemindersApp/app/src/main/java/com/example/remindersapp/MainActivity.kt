@@ -26,25 +26,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
         fab.setOnClickListener {
             startAddActivity()
         }
 
-        // add all data to reminders
-        for (i in Reminder.STANDERTREMINDERS){
-            reminders.add(Reminder(i))
-        }
-
         reminderRepository = ReminderRepository(this)
+
         initViews()
     }
 
     private fun initViews() {
+
+
         rvReminder.layoutManager = StaggeredGridLayoutManager(1, 1)
         rvReminder.adapter = reminderAdapter
         rvReminder.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         createItemTouchHelper().attachToRecyclerView(rvReminder)
         getRemindersFromDatabase()
+
+
     }
 
     private fun getRemindersFromDatabase() {
