@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.remindersapp.database.ReminderRepository
 
@@ -38,10 +40,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        rvReminder.layoutManager = StaggeredGridLayoutManager(1, 1) // gebruik een staggerd grid
-        rvReminder.adapter = reminderAdapter // adapter recycle view is questionadapter
-        // scheid de lijntjes doormiddel van een verticale lijn
+        rvReminder.layoutManager = StaggeredGridLayoutManager(1, 1)
+        rvReminder.adapter = reminderAdapter
         rvReminder.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        createItemTouchHelper().attachToRecyclerView(rvReminder)
         getRemindersFromDatabase()
     }
 
@@ -70,20 +72,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun createItemTouchHelper(): ItemTouchHelper {
+        // Callback which is used to create the ItemTouch helper. Only enables left swipe.
+        // Use ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) to also enable right swipe.
+        val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
+            // Enables or Disables the ability to move items up and down.
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+            // Callback triggered when a user swiped an item.
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                reminders.removeAt(position)
+                reminderAdapter.notifyDataSetChanged()
+
+                val reminderToDelete = reminders[position]
+                reminderRepository.deleteReminder(reminderToDelete)
+                getRemindersFromDatabase()
+            }
         }
+        return ItemTouchHelper(callback)
     }
+
 }
