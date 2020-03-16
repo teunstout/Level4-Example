@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.remindersapp.database.ReminderRepository
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -16,6 +17,8 @@ val ADD_REMINDER_REQUEST_CODE = 100;
 class MainActivity : AppCompatActivity() {
     private var reminders = arrayListOf<Reminder>()
     private var reminderAdapter = ReminderAdapter(reminders)
+    private lateinit var reminderRepository: ReminderRepository
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             reminders.add(Reminder(i))
         }
 
+        reminderRepository = ReminderRepository(this)
         initViews()
     }
 
@@ -38,6 +42,14 @@ class MainActivity : AppCompatActivity() {
         rvReminder.adapter = reminderAdapter // adapter recycle view is questionadapter
         // scheid de lijntjes doormiddel van een verticale lijn
         rvReminder.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        getRemindersFromDatabase()
+    }
+
+    private fun getRemindersFromDatabase() {
+        val reminders = reminderRepository.getAllReminders()
+        this@MainActivity.reminders.clear()
+        this@MainActivity.reminders.addAll(reminders)
+        reminderAdapter.notifyDataSetChanged()
     }
 
     private fun startAddActivity() {
@@ -51,8 +63,8 @@ class MainActivity : AppCompatActivity() {
                 ADD_REMINDER_REQUEST_CODE -> {
                     // kan beter zonder !!
                     val reminder = data!!.getParcelableExtra<Reminder>(EXTRA_REMINDER)
-                    reminders.add(reminder)
-                    reminderAdapter.notifyDataSetChanged()
+                    reminderRepository.insertReminder(reminder)
+                    getRemindersFromDatabase()
                 }
             }
         }
