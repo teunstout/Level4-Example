@@ -1,9 +1,10 @@
-package com.example.remindersapp
+package com.example.remindersapp.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.remindersapp.Reminder
 
 @Database(entities = [Reminder::class], version = 1, exportSchema = false)
 abstract class ReminderRoomDatabase: RoomDatabase(){
@@ -22,7 +23,8 @@ abstract class ReminderRoomDatabase: RoomDatabase(){
                     if (reminderRoomDatabaseInstance == null) {
                         reminderRoomDatabaseInstance = Room.databaseBuilder(
                                 context.applicationContext,
-                                ReminderRoomDatabase::class.java, DATABASE_NAME
+                                ReminderRoomDatabase::class.java,
+                                DATABASE_NAME
                             )
                             .allowMainThreadQueries()
                             .build()
