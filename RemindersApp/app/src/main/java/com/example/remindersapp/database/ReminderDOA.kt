@@ -9,7 +9,7 @@ interface ReminderDOA {
     fun getAllReminders() : List<Reminder>
 
     @Insert
-    fun insertReminders(reminder: Reminder)
+    fun insertReminder(reminder: Reminder)
 
     @Delete
     fun deleteReminder(reminder: Reminder)
