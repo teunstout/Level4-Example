@@ -14,7 +14,7 @@ class ReminderAdapter(val standardTasks: ArrayList<Reminder>) : RecyclerView.Ada
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.reminder_template, parent, false)
         )
@@ -24,7 +24,7 @@ class ReminderAdapter(val standardTasks: ArrayList<Reminder>) : RecyclerView.Ada
         return standardTasks.size
     }
 
-    override fun onBindViewHolder(holder: ReminderAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(standardTasks[position])
     }
 

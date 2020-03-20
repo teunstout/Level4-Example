@@ -18,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-val ADD_REMINDER_REQUEST_CODE = 100;
+const val ADD_REMINDER_REQUEST_CODE = 100
 
 class MainActivity : AppCompatActivity() {
     private var reminders = arrayListOf<Reminder>()
@@ -53,10 +53,10 @@ class MainActivity : AppCompatActivity() {
             val reminders = withContext(Dispatchers.IO) {
                 reminderRepository.getAllReminders()
             }
+            this@MainActivity.reminders.clear()
+            this@MainActivity.reminders.addAll(reminders)
+            reminderAdapter.notifyDataSetChanged()
         }
-        this@MainActivity.reminders.clear()
-        this@MainActivity.reminders.addAll(reminders)
-        reminderAdapter.notifyDataSetChanged()
     }
 
     private fun startAddActivity() {
