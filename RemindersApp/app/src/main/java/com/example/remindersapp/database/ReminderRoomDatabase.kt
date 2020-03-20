@@ -6,6 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.remindersapp.Reminder
 
+/**
+ * Manages database
+ * @Database = defines that this is database and of which class.
+ */
 @Database(entities = [Reminder::class], version = 1, exportSchema = false)
 abstract class ReminderRoomDatabase: RoomDatabase(){
 
@@ -26,7 +30,6 @@ abstract class ReminderRoomDatabase: RoomDatabase(){
                                 ReminderRoomDatabase::class.java,
                                 DATABASE_NAME
                             )
-                            .allowMainThreadQueries()
                             .build()
                     }
                 }

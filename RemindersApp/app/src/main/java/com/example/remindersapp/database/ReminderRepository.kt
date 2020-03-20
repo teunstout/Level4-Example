@@ -3,6 +3,9 @@ package com.example.remindersapp.database
 import android.content.Context
 import com.example.remindersapp.Reminder
 
+/**
+ * In this class we perform actions on the database
+ */
 class ReminderRepository(context: Context) {
 
     private var reminderDao: ReminderDOA
@@ -12,19 +15,19 @@ class ReminderRepository(context: Context) {
         reminderDao = reminderRoomDatabase!!.reminderDao()
     }
 
-    fun getAllReminders(): List<Reminder> {
+    suspend fun getAllReminders(): List<Reminder> {
         return reminderDao.getAllReminders()
     }
 
-    fun insertReminder(reminder: Reminder) {
+    suspend fun insertReminder(reminder: Reminder) {
         reminderDao.insertReminder(reminder)
     }
 
-    fun deleteReminder(reminder: Reminder) {
+    suspend fun deleteReminder(reminder: Reminder) {
         reminderDao.deleteReminder(reminder)
     }
 
-    fun updateReminder(reminder: Reminder) {
+    suspend fun updateReminder(reminder: Reminder) {
         reminderDao.updateReminder(reminder)
     }
 

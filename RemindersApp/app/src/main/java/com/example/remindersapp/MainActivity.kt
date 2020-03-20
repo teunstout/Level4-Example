@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.remindersapp.database.ReminderRepository
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 val ADD_REMINDER_REQUEST_CODE = 100;
 
@@ -37,19 +41,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-
-
         rvReminder.layoutManager = StaggeredGridLayoutManager(1, 1)
         rvReminder.adapter = reminderAdapter
         rvReminder.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         createItemTouchHelper().attachToRecyclerView(rvReminder)
         getRemindersFromDatabase()
-
-
     }
 
     private fun getRemindersFromDatabase() {
-        val reminders = reminderRepository.getAllReminders()
+        CoroutineScope(Dispatchers.Main).launch {
+            val reminders = withContext(Dispatchers.IO) {
+                reminderRepository.getAllReminders()
+            }
+        }
         this@MainActivity.reminders.clear()
         this@MainActivity.reminders.addAll(reminders)
         reminderAdapter.notifyDataSetChanged()
@@ -66,19 +70,20 @@ class MainActivity : AppCompatActivity() {
                 ADD_REMINDER_REQUEST_CODE -> {
                     // kan beter zonder !!
                     val reminder = data!!.getParcelableExtra<Reminder>(EXTRA_REMINDER)
-                    reminderRepository.insertReminder(reminder)
-                    getRemindersFromDatabase()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        withContext(Dispatchers.IO) {
+                            reminderRepository.insertReminder(reminder)
+                        }
+                        getRemindersFromDatabase()
+                    }
                 }
             }
         }
     }
 
     private fun createItemTouchHelper(): ItemTouchHelper {
-        // Callback which is used to create the ItemTouch helper. Only enables left swipe.
-        // Use ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) to also enable right swipe.
         val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-            // Enables or Disables the ability to move items up and down.
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -87,18 +92,16 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
 
-            // Callback triggered when a user swiped an item.
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val reminderToDelete = reminders[position]
 
-                reminders.removeAt(position)
-                reminderAdapter.notifyDataSetChanged()
-
-                reminderRepository.deleteReminder(reminderToDelete)
-
-
-                getRemindersFromDatabase()
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.IO) {
+                        reminderRepository.deleteReminder(reminderToDelete)
+                    }
+                    getRemindersFromDatabase()
+                }
             }
         }
         return ItemTouchHelper(callback)
