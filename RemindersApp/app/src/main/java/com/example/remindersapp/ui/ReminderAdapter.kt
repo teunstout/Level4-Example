@@ -1,13 +1,14 @@
-package com.example.remindersapp
+package com.example.remindersapp.ui
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.remindersapp.R
+import com.example.remindersapp.model.Reminder
 import kotlinx.android.synthetic.main.reminder_template.view.*
 
-class ReminderAdapter(val standardTasks: ArrayList<Reminder>) : RecyclerView.Adapter<ReminderAdapter.ViewHolder>() {
-
+class ReminderAdapter(private val standardTasks: ArrayList<Reminder>) : RecyclerView.Adapter<ReminderAdapter.ViewHolder>() {
     inner class ViewHolder(textview: View) : RecyclerView.ViewHolder(textview) {
         fun bind(reminder: Reminder) {
             itemView.reminderName.text = reminder.name

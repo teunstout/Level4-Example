@@ -1,4 +1,4 @@
-package com.example.remindersapp
+package com.example.remindersapp.model
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

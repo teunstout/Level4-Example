@@ -4,14 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.remindersapp.Reminder
+import com.example.remindersapp.model.Reminder
 
 /**
  * Manages database
  * @Database = defines that this is database and of which class.
  */
 @Database(entities = [Reminder::class], version = 1, exportSchema = false)
-abstract class ReminderRoomDatabase: RoomDatabase(){
+abstract class ReminderRoomDatabase : RoomDatabase() {
 
     abstract fun reminderDao(): ReminderDOA // Implementeerd de database in de class
 
@@ -26,10 +26,10 @@ abstract class ReminderRoomDatabase: RoomDatabase(){
                 synchronized(ReminderRoomDatabase::class.java) {
                     if (reminderRoomDatabaseInstance == null) {
                         reminderRoomDatabaseInstance = Room.databaseBuilder(
-                                context.applicationContext,
-                                ReminderRoomDatabase::class.java,
-                                DATABASE_NAME
-                            )
+                            context.applicationContext,
+                            ReminderRoomDatabase::class.java,
+                            DATABASE_NAME
+                        )
                             .build()
                     }
                 }

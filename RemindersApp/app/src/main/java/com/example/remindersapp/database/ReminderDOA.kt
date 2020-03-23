@@ -1,7 +1,7 @@
 package com.example.remindersapp.database
 
 import androidx.room.*
-import com.example.remindersapp.Reminder
+import com.example.remindersapp.model.Reminder
 
 /**
  * Basic CRUD operations

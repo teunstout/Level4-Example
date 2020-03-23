@@ -1,7 +1,7 @@
 package com.example.remindersapp.database
 
 import android.content.Context
-import com.example.remindersapp.Reminder
+import com.example.remindersapp.model.Reminder
 
 /**
  * In this class we perform actions on the database
